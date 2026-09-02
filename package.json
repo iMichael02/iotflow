@@ -1,0 +1,23 @@
+{
+    "name": "iotflow",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "dev:gateway": "pnpm --filter @iotflow/gateway dev",
+        "build": "pnpm -r build",
+        "typecheck": "pnpm -r typecheck"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devEngines": {
+        "packageManager": {
+            "name": "pnpm",
+            "version": "11.23.0",
+            "onFail": "download"
+        }
+    },
+    "packageManager": "pnpm@11.23.0",
+    "type": "module"
+}

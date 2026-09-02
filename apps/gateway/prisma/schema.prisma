@@ -1,0 +1,52 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+}
+
+model Device {
+    id         String       @id @default(uuid())
+    deviceId   String       @unique
+    name       String
+    deviceType DeviceType
+    status     DeviceStatus @default(ONLINE)
+    createdAt  DateTime     @default(now())
+    updatedAt  DateTime     @updatedAt
+
+    telemetry Telemetry[]
+
+    @@map("devices")
+}
+
+model Telemetry {
+    id          String   @id @default(uuid())
+    temperature Float?
+    humidity    Float?
+    detected    Boolean?
+    state       String?
+    voltage     Float?
+    current     Float?
+    watts       Float?
+    recordedAt  DateTime
+    receivedAt  DateTime @default(now())
+    deviceId    String
+    device      Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+
+    @@index([deviceId])
+    @@index([recordedAt])
+    @@map("telemetry")
+}
+
+enum DeviceStatus {
+    ONLINE
+    OFFLINE
+}
+
+enum DeviceType {
+    temperature_humidity
+    motion
+    door
+    power_meter
+}

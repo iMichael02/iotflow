@@ -1,0 +1,42 @@
+services:
+    mqtt:
+        image: eclipse-mosquitto:2
+        container_name: iotflow-mqtt
+        ports:
+            - "1883:1883"
+            - "9001:9001"
+        volumes:
+            - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
+            - mosquitto_data:/mosquitto/data
+            - mosquitto_log:/mosquitto/log
+        networks:
+            - iotflow-network
+
+    postgres:
+        image: postgres:18
+        container_name: iotflow-postgres
+        restart: unless-stopped
+        environment:
+            POSTGRES_USER: iotflow
+            POSTGRES_PASSWORD: iotflow_password
+            POSTGRES_DB: iotflow
+        ports:
+            - "5432:5432"
+        volumes:
+            - postgres_data:/var/lib/postgresql
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U iotflow -d iotflow"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+        networks:
+            - iotflow-network
+
+volumes:
+    mosquitto_data:
+    mosquitto_log:
+    postgres_data:
+
+networks:
+    iotflow-network:
+        driver: bridge
