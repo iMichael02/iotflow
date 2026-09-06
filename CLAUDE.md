@@ -31,6 +31,8 @@
 
 ## Issue Workflow
 
+Look for the issue on github repo `https://github.com/iMichael02/iotflow/issues` when working on one or many.
+
 ### Issue Creation Standards
 
 All new issues must follow a professional, structured format to ensure clarity and engineering alignment. Every issue should include the following sections:
