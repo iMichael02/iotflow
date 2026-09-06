@@ -31,9 +31,24 @@
 
 ## Issue Workflow
 
-- **Branch Naming**: For each issue, create a new git branch named `[issue code]-short-description`.
-- **Commit Messages**: Commit messages must follow the format `type[issue code]: summary`.
-- **Issue Types**: Use `feat`, `chore`, or `fix` as the type, type of an issue must be mentioned in the issue description.
+### Issue Creation Standards
+
+All new issues must follow a professional, structured format to ensure clarity and engineering alignment. Every issue should include the following sections:
+
+- **Title**: A concise, action-oriented title (e.g., "[T-XX] Short Description").
+- **Overview**: A high-level summary of the task.
+- **Context**: The technical rationale or "why" behind the issue.
+- **Proposed Implementation**: A technical outline of the approach or components involved.
+- **Acceptance Criteria**: A checklist of verifiable requirements (using `- [ ]` syntax) that must be met to consider the issue resolved.
+
+### Branch Naming
+
+For each issue, create a new git branch named `[issue code]-short-description`.
+
+### Commit Messages
+
+Commit messages must follow the format `type[issue code]: summary`.
+- **Issue Types**: Use `feat`, `chore`, or `fix` as the type. The type of an issue must be mentioned in the issue description.
 - **Example**: For issue `T-01` (feature to create the ESP-32 control layer and IoT gateway), the branch name should be `T-01-create-esp-32-control-layer-and-iot-gateway` and the commit message should be `feat[T-01]: some message`.
 
 ## Testing and Verification
