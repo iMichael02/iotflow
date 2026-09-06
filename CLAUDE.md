@@ -41,6 +41,8 @@ All new issues must follow a professional, structured format to ensure clarity a
 - **Proposed Implementation**: A technical outline of the approach or components involved.
 - **Acceptance Criteria**: A checklist of verifiable requirements (using `- [ ]` syntax) that must be met to consider the issue resolved.
 
+Furthermore, if an issue should have relationships, they must be defined on issue creation.
+
 ### Branch Naming
 
 For each issue, create a new git branch named `[issue code]-short-description`.
