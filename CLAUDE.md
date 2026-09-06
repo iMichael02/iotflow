@@ -47,7 +47,8 @@ For each issue, create a new git branch named `[issue code]-short-description`.
 
 ### Commit Messages
 
-Commit messages must follow the format `type[issue code]: summary`.
+Commit messages must follow the format `type[issue code]: summary`. If no issue is related to the commit, then issue code will be `no-issue`.
+
 - **Issue Types**: Use `feat`, `chore`, or `fix` as the type. The type of an issue must be mentioned in the issue description.
 - **Example**: For issue `T-01` (feature to create the ESP-32 control layer and IoT gateway), the branch name should be `T-01-create-esp-32-control-layer-and-iot-gateway` and the commit message should be `feat[T-01]: some message`.
 
