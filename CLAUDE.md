@@ -31,7 +31,7 @@
 
 ## Issue Workflow
 
-Look for the issue on github repo `https://github.com/iMichael02/iotflow/issues` when working on one or many.
+Use `gh` commands to look for the issues on github repo `https://github.com/iMichael02/iotflow/issues` and gather information when asked to work on the issues.
 
 ### Issue Creation Standards
 
