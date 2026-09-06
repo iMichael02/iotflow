@@ -43,9 +43,9 @@ All new issues must follow a professional, structured format to ensure clarity a
 
 Furthermore, if an issue should have relationships, they must be defined on issue creation.
 
-### Branch Naming
+### Branching
 
-For each issue, create a new git branch named `[issue code]-short-description`. Any changes related to an issue should only be pushed to the corresponding branch.
+For each issue, create a new git branch named `[issue code]-short-description`. Any changes or commit related to an issue should only be pushed to the corresponding branch.
 
 ### Commit Messages
 
