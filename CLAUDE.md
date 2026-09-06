@@ -45,7 +45,7 @@ Furthermore, if an issue should have relationships, they must be defined on issu
 
 ### Branch Naming
 
-For each issue, create a new git branch named `[issue code]-short-description`.
+For each issue, create a new git branch named `[issue code]-short-description`. Any changes related to an issue should only be pushed to the corresponding branch.
 
 ### Commit Messages
 
