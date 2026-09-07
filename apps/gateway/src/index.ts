@@ -4,7 +4,7 @@ import { randomUUID } from "crypto";
 import { parseGatewayEvent } from "@iotflow/shared";
 
 import { config } from "./config.js";
-import { saveTelemetry } from "./services/telemetry.js";
+import { saveTelemetry, ensureBronzeBucket } from "./services/telemetry.js";
 import { prisma } from "./lib/prisma.js";
 
 const client = mqtt.connect(config.mqttBrokerUrl, {
@@ -17,7 +17,9 @@ const start = async () => {
 
         console.log("[gateway] Connected to PostgreSQL");
 
-        connectMqtt();
+        await ensureBronzeBucket();
+
+        console.log("[gateway] Bronze bucket ready");
     } catch (error) {
         console.error("[gateway] Failed to start gateway", error);
 
@@ -64,7 +66,7 @@ const handleMessage = async (topic: string, message: Buffer): Promise<void> => {
 
         const telemetry = parseGatewayEvent(parsedPayload);
 
-        await saveTelemetry(telemetry);
+        await saveTelemetry(telemetry, rawPayload);
         console.log(
             `[gateway] Saved telemetry for device ${telemetry.deviceId}`,
         );
@@ -91,3 +93,4 @@ process.on("SIGINT", () => shutdown());
 process.on("SIGTERM", () => shutdown());
 
 start();
+connectMqtt();
