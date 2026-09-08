@@ -25,9 +25,6 @@ Reference material:
 Folder structure for test files:
 
 - Place a unit test inside test folder which is placed beside the source file's feature area in the repository test tree.
-- Mirror the source path:
-    - `src/auth/login.ts` -> `tests/auth/tests/login.test.ts`
-    - `src/services/user.ts` -> `tests/services/tests/user.test.ts`
 - If the repo uses a nested test tree, use the same nested area under `tests/` and keep one file per source file.
 - Use the same file extension as the repo's existing test naming pattern (`.test.ts` or `.spec.ts`) and update only the test file for the selected source file.
 
