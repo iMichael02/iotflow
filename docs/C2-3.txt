@@ -1,0 +1,2 @@
+Before CLAUDE.md was updated with correct git branch instructions, Claude committed and pushed changes for issue T-01 to main branch as seen in claude-commit-and-push-changes-to-main.png.
+After CLAUDE.md is updated, Claude worked, committed and pushed changes for issue T-02 to correct branch, visible on github.
