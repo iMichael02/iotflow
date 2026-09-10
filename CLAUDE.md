@@ -63,7 +63,7 @@ Commit messages must follow the format `type[issue code]: summary`. If no issue 
 
 # Contract enforcement gate
 
-Before any change to telemetry payloads, device types, or data contracts:
+Before any change to or any non-empty git commit that includes telemetry payloads, device types, or data contracts:
 
 1. Map the change to one Medallion layer:
     - Bronze = raw ingest
