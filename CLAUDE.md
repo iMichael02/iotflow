@@ -60,3 +60,32 @@ Commit messages must follow the format `type[issue code]: summary`. If no issue 
 
 - Always run `pnpm -r typecheck` before committing changes to ensure type safety across the monorepo.
 - Ensure any changes to the data pipeline are validated against the "Tracer Bullet" implementation patterns.
+
+# Contract enforcement gate
+
+Before any change to telemetry payloads, device types, or data contracts:
+
+1. Map the change to one Medallion layer:
+    - Bronze = raw ingest
+    - Silver = validation/normalization
+    - Gold = aggregation/business-ready
+
+2. If the change introduces a new event/device type:
+    - stop unless the shared contract is updated in
+      [packages/shared/src/common.ts](packages/shared/src/common.ts),
+      [packages/shared/src/individualSchemas.ts](packages/shared/src/individualSchemas.ts),
+      [packages/shared/src/registry.ts](packages/shared/src/registry.ts),
+      and the parser in [packages/shared/src/index.ts](packages/shared/src/index.ts).
+
+3. If the change writes a new telemetry column or enum value:
+    - stop unless the persistence model in [apps/gateway/prisma/schema.prisma](apps/gateway/prisma/schema.prisma)
+      and the mapper in [apps/gateway/src/services/telemetry.ts](apps/gateway/src/services/telemetry.ts)
+      are kept in sync.
+
+4. If those checks cannot be completed:
+    - return a block message such as:
+      “Blocked: schema manifest and shared contract must be updated before this telemetry change is allowed.”
+
+5. Verify with:
+    - `pnpm -r typecheck`
+    - relevant test proof in [packages/shared/tests/index.test.ts](packages/shared/tests/index.test.ts)
