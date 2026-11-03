@@ -1,6 +1,7 @@
 packages:
   - apps/*
   - packages/*
+  - devices/*
 allowBuilds:
   '@prisma/engines': true
   esbuild: true
