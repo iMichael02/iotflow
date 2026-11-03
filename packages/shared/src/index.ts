@@ -1,6 +1,9 @@
-import { z } from "zod";
 import { GatewayEventBaseSchema } from "./common";
+import { buildManifest, verifyManifest } from "./manifest";
 import { DeviceSchemas, DeviceType } from "./registry";
+
+export * from "./manifest";
+export * from "./registry";
 
 export const parseGatewayEvent = (input: unknown) => {
     const baseEvent = GatewayEventBaseSchema.parse(input);
@@ -11,10 +14,21 @@ export const parseGatewayEvent = (input: unknown) => {
         throw new Error(`Unsupported device type: ${baseEvent.deviceType}`);
     }
 
+    // Validate a device-supplied manifest, or inject one when absent.
+    // The checksum covers the raw data, so it is checked before schema parsing strips keys.
+    const manifest = baseEvent.manifest ?? buildManifest(baseEvent);
+
+    if (baseEvent.manifest) {
+        verifyManifest(baseEvent.manifest, baseEvent);
+    }
+
     const data = schema.parse(baseEvent.data);
 
     return {
         ...baseEvent,
+        manifest,
         data,
     };
 };
+
+export type ParsedGatewayEvent = ReturnType<typeof parseGatewayEvent>;

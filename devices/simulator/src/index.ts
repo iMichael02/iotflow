@@ -1,6 +1,7 @@
 import "dotenv/config";
 import mqtt from "mqtt";
 import type { DeviceType } from "@iotflow/shared/src/registry";
+import { buildManifest } from "@iotflow/shared/src/manifest";
 
 const mqttBrokerUrl = process.env.MQTT_BROKER_URL ?? "mqtt://localhost:1883";
 const deviceId = process.env.DEVICE_ID ?? "sim-temp-humidity-001";
@@ -12,16 +13,19 @@ const topic = `iotflow/devices/${deviceId}/telemetry`;
 const buildPayload = () => {
     const now = new Date().toISOString();
 
+    const data = {
+        temperature: 20 + Math.random() * 15,
+        humidity: 40 + Math.random() * 50,
+    };
+
     return {
         deviceId,
         deviceType,
         recordedAt: now,
         receivedAt: now,
         topic,
-        data: {
-            temperature: 20 + Math.random() * 15,
-            humidity: 40 + Math.random() * 50,
-        },
+        manifest: buildManifest({ deviceId, deviceType, recordedAt: now, data }),
+        data,
     };
 };
 
