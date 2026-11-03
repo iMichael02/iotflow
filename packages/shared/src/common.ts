@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { ManifestSchema } from "./manifest";
 
 export const GatewayEventBaseSchema = z.object({
     deviceId: z.string().min(1),
@@ -11,6 +12,8 @@ export const GatewayEventBaseSchema = z.object({
     deviceType: z.string().min(1),
 
     data: z.unknown(),
+
+    manifest: ManifestSchema.optional(),
 });
 
 export type GatewayEventBase = z.infer<typeof GatewayEventBaseSchema>;

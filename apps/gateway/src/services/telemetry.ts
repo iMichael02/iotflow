@@ -1,4 +1,4 @@
-import type { GatewayEventBase } from "@iotflow/shared/src/common";
+import type { ParsedGatewayEvent } from "@iotflow/shared";
 import type { DeviceType } from "@prisma/client";
 import {
     S3Client,
@@ -25,8 +25,8 @@ export const ensureBronzeBucket = async () => {
     }
 };
 
-export const saveTelemetry = async (event: GatewayEventBase, rawPayload: string) => {
-    const { deviceId, deviceType, recordedAt, receivedAt, data } = event;
+export const saveTelemetry = async (event: ParsedGatewayEvent, rawPayload: string) => {
+    const { deviceId, deviceType, recordedAt, receivedAt, data, manifest } = event;
 
     const {
         temperature = null,
@@ -46,8 +46,16 @@ export const saveTelemetry = async (event: GatewayEventBase, rawPayload: string)
             new PutObjectCommand({
                 Bucket: config.minio.bucket,
                 Key: objectKey,
-                Body: rawPayload,
+                // Manifest header + untouched device payload, so Bronze objects are self-describing.
+                Body: JSON.stringify({ manifest, payload: JSON.parse(rawPayload) }),
                 ContentType: "application/json",
+                Metadata: {
+                    "schema-version": manifest.schemaVersion,
+                    "device-type": manifest.deviceType,
+                    ...(manifest.integrity && {
+                        checksum: manifest.integrity.checksum,
+                    }),
+                },
             }),
         );
         console.log(`[gateway] Saved raw payload to Bronze layer: ${objectKey}`);
