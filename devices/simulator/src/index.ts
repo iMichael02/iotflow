@@ -6,6 +6,8 @@ import { buildManifest } from "@iotflow/shared/src/manifest";
 const mqttBrokerUrl = process.env.MQTT_BROKER_URL ?? "mqtt://localhost:1883";
 const deviceId = process.env.DEVICE_ID ?? "sim-temp-humidity-001";
 const deviceType: DeviceType = "temperature_humidity";
+// Set SIMULATOR_FORCE_ALERT=true to emit readings that violate the default alert rules.
+const forceAlert = process.env.SIMULATOR_FORCE_ALERT === "true";
 const intervalMs = parseInt(process.env.SIMULATOR_INTERVAL_MS ?? "5000");
 
 const topic = `iotflow/devices/${deviceId}/telemetry`;
@@ -14,7 +16,7 @@ const buildPayload = () => {
     const now = new Date().toISOString();
 
     const data = {
-        temperature: 20 + Math.random() * 15,
+        temperature: (forceAlert ? 31 : 20) + Math.random() * 15,
         humidity: 40 + Math.random() * 50,
     };
 
