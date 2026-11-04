@@ -4,6 +4,11 @@ export const config = {
     mqttBrokerUrl: process.env.MQTT_BROKER_URL ?? "mqtt://localhost:1883",
     mqttTopic: process.env.MQTT_TOPIC ?? "iotflow/devices/+/telemetry",
 
+    kafka: {
+        brokers: (process.env.KAFKA_BROKERS ?? "localhost:9092").split(","),
+        topic: process.env.KAFKA_TOPIC ?? "iotflow.telemetry",
+    },
+
     minio: {
         endpoint: process.env.MINIO_ENDPOINT ?? "localhost",
         port: parseInt(process.env.MINIO_PORT ?? "9000"),

@@ -5,6 +5,7 @@ import { parseGatewayEvent } from "@iotflow/shared";
 
 import { config } from "./config.js";
 import { saveTelemetry, ensureBronzeBucket } from "./services/telemetry.js";
+import { connectKafka, publishTelemetry, disconnectKafka } from "./services/kafka.js";
 import { prisma } from "./lib/prisma.js";
 
 const client = mqtt.connect(config.mqttBrokerUrl, {
@@ -18,6 +19,8 @@ const start = async () => {
         console.log("[gateway] Connected to PostgreSQL");
 
         await ensureBronzeBucket();
+
+        await connectKafka();
 
         console.log("[gateway] Bronze bucket ready");
     } catch (error) {
@@ -66,7 +69,11 @@ const handleMessage = async (topic: string, message: Buffer): Promise<void> => {
 
         const telemetry = parseGatewayEvent(parsedPayload);
 
+        // Hot path: publish immediately, concurrently with persistence.
+        const published = publishTelemetry(telemetry);
+
         await saveTelemetry(telemetry, rawPayload);
+        await published;
         console.log(
             `[gateway] Saved telemetry for device ${telemetry.deviceId}`,
         );
@@ -82,6 +89,8 @@ const shutdown = async (exitCode = 0) => {
     console.log("[gateway] Shutting down...");
 
     client.end(true);
+
+    await disconnectKafka();
 
     await prisma.$disconnect();
 

@@ -2,6 +2,7 @@ import { GatewayEventBaseSchema } from "./common";
 import { buildManifest, verifyManifest } from "./manifest";
 import { DeviceSchemas, DeviceType } from "./registry";
 
+export * from "./alert";
 export * from "./manifest";
 export * from "./registry";
 
