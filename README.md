@@ -71,7 +71,7 @@ Status legend: `[built]` exists in the repo today, `[partial]` started, `[planne
    Gateway ──► Bronze  (MinIO)      [built]   raw { manifest, payload }
    Gateway ──► PostgreSQL           [built]   devices + parsed telemetry
    Gateway ──► Kafka ──► Alerting   [built]   hot path, threshold alerts (T-04)
-   Stream Processor ──► Silver      [planned] validated, normalized
+   Gateway ──► Kafka ──► Stream Processor ──► Silver (MinIO, Parquet)   [built] validated, normalized (T-07)
    Data Pipeline    ──► Gold        [planned] aggregated, business-ready
 ```
 
@@ -80,7 +80,7 @@ Status legend: `[built]` exists in the repo today, `[partial]` started, `[planne
 | IoT Gateway (MQTT to Bronze and PostgreSQL, manifest validation) | `apps/gateway` | Built |
 | Device Simulator (temperature/humidity over MQTT) | `devices/simulator` | Built |
 | Shared data contracts and manifest | `packages/shared` | Built |
-| Stream Processor (Bronze to Silver) | `apps/stream-processor` | Partial: transformer only, no Kafka consumer or Silver output yet |
+| Stream Processor (Bronze to Silver) | `apps/stream-processor` | Built (T-07); Parquet output verified with a mocked S3 client, not yet against live Kafka/MinIO |
 | Hot-path Alerting (Kafka consumer, threshold rules, console/webhook notifiers) | `apps/alerting` | Built; not yet run against live Kafka |
 | Kafka, MinIO, Mosquitto, PostgreSQL | `infrastructure/` | Built |
 | Device, Alert and Analytics services (gRPC) | not yet created | Planned |

@@ -6,6 +6,7 @@
     "scripts": {
         "dev:gateway": "pnpm --filter @iotflow/gateway dev",
         "dev:alerting": "pnpm --filter @iotflow/alerting dev",
+        "dev:stream-processor": "pnpm --filter @iotflow/stream-processor dev",
         "dev:simulator": "pnpm --filter @iotflow/device-simulator dev",
         "build": "pnpm -r build",
         "typecheck": "pnpm -r typecheck"
