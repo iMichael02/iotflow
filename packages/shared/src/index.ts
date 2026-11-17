@@ -5,6 +5,7 @@ import { DeviceSchemas, DeviceType } from "./registry";
 export * from "./alert";
 export * from "./manifest";
 export * from "./registry";
+export * from "./silver";
 
 export const parseGatewayEvent = (input: unknown) => {
     const baseEvent = GatewayEventBaseSchema.parse(input);

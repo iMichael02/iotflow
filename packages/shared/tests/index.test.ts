@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { describe, it, expect } from "vitest";
 import {
     parseGatewayEvent,
@@ -5,6 +6,10 @@ import {
     CURRENT_SCHEMA_VERSION,
     AlertRuleSchema,
     AlertSchema,
+    DeviceSchemas,
+    SILVER_SCHEMA_VERSION,
+    TELEMETRY_RECORD_MEASUREMENTS,
+    TelemetryRecordSchema,
 } from "../src/index";
 
 const recordedAt = "2026-11-03T08:00:00.000Z";
@@ -112,5 +117,56 @@ describe("alert contract", () => {
                 latencyMs: 12,
             }).value,
         ).toBe(35);
+    });
+});
+
+describe("silver contract", () => {
+    const record = () => ({
+        deviceId: "dev-1",
+        deviceType: "temperature_humidity",
+        schemaVersion: SILVER_SCHEMA_VERSION,
+        timestamp: recordedAt,
+        receivedAt: recordedAt,
+        temperature: 21.5,
+        humidity: 50,
+        detected: null,
+        state: null,
+        voltage: null,
+        current: null,
+        watts: null,
+    });
+
+    it("parses a well-formed Silver record", () => {
+        expect(TelemetryRecordSchema.parse(record()).temperature).toBe(21.5);
+    });
+
+    it("requires measurement columns to be present (null, not missing)", () => {
+        const { watts: _watts, ...incomplete } = record();
+
+        expect(() => TelemetryRecordSchema.parse(incomplete)).toThrow();
+    });
+
+    it("rejects a non-ISO timestamp", () => {
+        expect(() => TelemetryRecordSchema.parse({ ...record(), timestamp: 1725350400000 })).toThrow();
+    });
+
+    it("has a column for every field of every registered device schema", () => {
+        const deviceFields = Object.values(DeviceSchemas).flatMap((schema) => Object.keys(schema.shape));
+
+        for (const field of deviceFields) {
+            expect(TELEMETRY_RECORD_MEASUREMENTS).toContain(field);
+        }
+    });
+
+    it("keeps measurement columns in sync with the gateway persistence model", () => {
+        const prisma = readFileSync(
+            new URL("../../../apps/gateway/prisma/schema.prisma", import.meta.url),
+            "utf8",
+        );
+        const telemetryModel = /model Telemetry \{([\s\S]*?)\n\}/.exec(prisma)?.[1] ?? "";
+
+        for (const field of TELEMETRY_RECORD_MEASUREMENTS) {
+            expect(telemetryModel).toMatch(new RegExp(`^\\s+${field}\\s`, "m"));
+        }
     });
 });
